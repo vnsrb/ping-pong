@@ -7,9 +7,11 @@ init()
 # Constants
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 pelota = 'pelota-de-tenis.png'
+plataforma = 'plataforma.png'
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 BACK_COLOR = (173, 216, 230)
+FPS = 120
 
 # Main screen
 screen = display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -55,13 +57,20 @@ class Pelota(MainSprite):
         if self.rect.y >= SCREEN_HEIGHT:
             self.rect.y = 0
             self.rect.x = randint(0, SCREEN_WIDTH - 50)
+            
 
 
 pelota = Pelota(pelota, 320, 240, 50, 50, 5)
+speed_x, speed_y = 3, 3
+
+#plataforma = Paddle(plataforma, 400, 560, 100, 30)
+
 finish = False
 run = True
+clock = time.Clock()
 
 while run:
+    clock.tick(FPS)
     for e in event.get():
         if e.type == QUIT:
             quit()
@@ -70,9 +79,13 @@ while run:
     if not finish:
         screen.fill(BACK_COLOR)
         pelota.reset()
+        pelota.rect.x += speed_x
+        pelota.rect.y += speed_y
 
-
+    if pelota.rect.y > SCREEN_HEIGHT - 50 or pelota.rect.y < 0:
+        speed_y *= -1
 
     display.update()
+    clock.tick(FPS)
 
 quit()
